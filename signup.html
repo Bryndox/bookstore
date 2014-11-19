@@ -1,0 +1,124 @@
+
+<html lang="en">
+<head>
+      <script src="scripts/jquery-1.9.1.js"></script>
+      <script src="scripts/ajaxform.js"></script>
+
+    <!-- Basic Page Needs
+  ================================================== -->
+    <meta charset="utf-8">
+    <title>BookStore - Welcome!</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas
+  ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+  ================================================== -->
+
+    <!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+    <link rel="stylesheet" type="text/css" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
+    <link rel="stylesheet" type="text/css" href="css/template.css" />
+
+    
+</head>
+<body>
+
+    <div class="container">
+        <div id="logo">
+            <img src="images/logo.png" />
+        </div>
+        <div class="flat-form">
+            <ul class="tabs">
+                <li>
+                    <a href="#login" class="active">Login</a>
+                </li>
+                <li>
+                    <a href="#register">Register</a>
+                </li>
+                <li>
+                    <a href="#reset">Reset Password</a>
+                </li>
+            </ul>
+            <div id="login" class="form-action show">
+                <h1>Login</h1>
+                <p>
+                    Login to your account and start using BookStore!
+                </p>
+                <form action="php/login.php" method="post">
+                    <ul>
+                        <li>
+                            <input type="text" name="username" placeholder="Username" id="loginUsername" />
+                        </li>
+                        <li>
+                            <input type="password" name="password" placeholder="Password" id="loginPass" />
+                        </li>
+                        <p id="loginErrMsg"></p>
+                        <li>
+                            <input type="submit" value="Login" class="button" id="btnLogIn" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#login.form-action-->
+            <div id="register" class="form-action hide">
+                <h1>Register</h1>
+                <p>
+                    Register for an account by filling and submitting in the form below.
+                </p>
+                <form>
+                    <ul>
+                        <li>
+                            <input type="text" placeholder="Firstname" id="signUpFirstname"/>
+                        </li>
+                        <li>
+                            <input type="text" placeholder="Lastname" id="signUpLastname"/>
+                        </li>
+                         <li>
+                            <input type="text" placeholder="Email" id="signUpEmail" />
+                        </li>
+                        <li>
+                            <input type="text" placeholder="Username" id="signUpUsername" />
+                        </li>
+                        <li>
+                            <input type="password" placeholder="Password" id="signUpPass1"/>
+                        </li>
+                        <li>
+                            <input type="password" placeholder="Re-type Password" id="signUpPass2"/>
+                        </li>
+                        <p id="SingUpErrMsg"></p>
+                        <li>
+                            <input type="submit" value="Sign Up" class="button" id="btnSignUp" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#register.form-action-->
+            <div id="reset" class="form-action hide">
+                <h1>Reset Password</h1>
+                <p>
+                    To reset your password enter your email we'll send you a link to reset your password.
+                </p>
+                <form>
+                    <ul>
+                        <li>
+                            <input type="text" placeholder="Email" />
+                        </li>
+                        <li>
+                            <input type="submit" value="Send" class="button" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#register.form-action-->
+        </div>
+    </div>
+   
+    <script src="scripts/form.js"></script>
+</body>
+</html>

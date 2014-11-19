@@ -1,0 +1,17 @@
+body{
+ background:url('../images/pattern.png') repeat scroll 0% 0%, url('../images/booksbg1.jpg')  scroll 0% 0% ;  
+ background-attachment: fixed;
+}
+
+#logo{
+    height: 100px;
+    width: 390px;
+    margin: 0px auto;
+    background: #20E1B5; 
+    
+}
+
+#logo img{
+    display: block;
+    margin: 0px auto;
+}
