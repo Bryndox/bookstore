@@ -100,6 +100,10 @@ form input[type=password]{
   outline: none;
 
 }
+form ul li{
+ margin: 5px 0;   
+    
+}
 
 #loginErrMsg{
     font-size: 12px;
@@ -111,6 +115,13 @@ form input[type=password]{
 }
 .loginErrMsg{
     color: #FF4040;
+}
+
+#ratingsFormErrMsg{
+    color: #FF4040;
+    font-size: 12px;
+    margin: 20px 0 5px 0;
+    font-weight: bold;
 }
 .dark-box {
   background: #5e0400;

@@ -20,16 +20,16 @@
             </div>
             <ul class="tabs">
                 <li>
-                    <a href="#pg-home" class="active">HOME</a>
+                    <a href="#pg-home" id="tabs-home" class="active">HOME</a>
                 </li>
                 <li>
-                    <a href="#pg-books">BOOKS</a>
+                    <a href="#pg-books" id="tabs-books">BOOKS</a>
                 </li>
                 <li>
-                    <a href="#pg-ratings">RATINGS</a>
+                    <a href="#pg-ratings" id="tabs-ratings">RATINGS</a>
                 </li>
                 <li>
-                    <a href="#pg-statistics">STATISTICS</a>
+                    <a href="#pg-statistics" id="tabs-statistics">STATISTICS</a>
                 </li>
             </ul>
             
@@ -43,7 +43,7 @@
         <!--Home page markup  -->
         <div id="pg-home" class="page-action show">
             <!--  Form Area -->
-            <div id="formArea">
+            <div class="formArea">
                 <div class="formHolder">
                     <form>
                         <ul>
@@ -68,7 +68,8 @@
                     <table class="table-fill">
                         <thead>
                         <tr>
-                        <th style="width:2%" class="text-left">ID</th>
+                        <th style="width:2%" class="text-left">NO.</th>
+                        <th style="width:15%" class="text-left">BOOK ID</th>
                         <th style="width:10%" class="text-left">YEAR</th>
                         <th style="" class="text-left">TITLE</th>
                         </tr>
@@ -76,26 +77,31 @@
                         <tbody class="table-hover">
                         <tr>
                         <td class="text-left">1</td>
+                        <td class="text-left">12331</td>
                         <td class="text-left">1991</td>
                         <td class="text-left">$ 50,000.00</td>
                         </tr>
                         <tr>
                         <td class="text-left">2</td>
+                        <td class="text-left">1271</td>
                         <td class="text-left">2000</td>
                         <td class="text-left">$ 10,000.00</td>
                         </tr>
                         <tr>
                         <td class="text-left">3</td>
+                        <td class="text-left">331</td>
                         <td class="text-left">1997</td>
                         <td class="text-left">$ 85,000.00</td>
                         </tr>
                         <tr>
                         <td class="text-left">4</td>
+                        <td class="text-left">12</td>
                         <td class="text-left">2005</td>
                         <td class="text-left">$ 56,000.00</td>
                         </tr>
                         <tr>
                         <td class="text-left">5</td>
+                        <td class="text-left">1233121</td>
                         <td class="text-left">2010</td>
                         <td class="text-left">$ 98,000.00</td>
                         </tr>
@@ -108,30 +114,36 @@
                     <table class="table-fill">
                         <thead>
                         <tr>
-                        <th style="width:2%" class="text-left">USER ID</th>
+                        <th style="width:1%" class="text-left">NO.</th>
+                        <th style="width:5%" class="text-left">USER ID</th>
                         <th style="width:10%" class="text-left">SIMILARITY SCORE</th>
                         </tr>
                         </thead>
                         <tbody class="table-hover">
                         <tr>
                         <td class="text-left">1</td>
-                        <td class="text-left">1991</td>
+                        <td class="text-left">11223</td>
+                        <td class="text-left">0.991</td>
                         </tr>
                         <tr>
                         <td class="text-left">2</td>
-                        <td class="text-left">2000</td>
+                        <td class="text-left">112223</td>
+                        <td class="text-left">0.900</td>
                         </tr>
                         <tr>
                         <td class="text-left">3</td>
-                        <td class="text-left">1997</td>
+                        <td class="text-left">123</td>
+                        <td class="text-left">0.897</td>
                         </tr>
                         <tr>
                         <td class="text-left">4</td>
-                        <td class="text-left">2005</td>
+                        <td class="text-left">7663</td>
+                        <td class="text-left">0.8005</td>
                         </tr>
                         <tr>
                         <td class="text-left">5</td>
-                        <td class="text-left">2010</td>
+                        <td class="text-left">123</td>
+                        <td class="text-left">0.7010</td>
                         </tr>
                         </tbody>
                     </table>
@@ -143,13 +155,13 @@
         
         <!--Books page markup  -->
         <div id="pg-books" class="page-action hide">
-            <!--  Form Area -->
-            <div id="formArea">
-                <h3>Books Page</h3>
-            </div>
-
             <!--  Main Body -->        
-            <div id="mainBody">
+            <div id="mainBody_books">
+                <h3><span id="loadBooksBtn">Load all Books</span></h3>  
+                <ul class="list_page_numbers">
+                    </ul>
+                <div id="mainBody_books_table">
+                </div>
             </div>
         </div>
         
@@ -157,12 +169,36 @@
         <!--Rating page markup  -->
         <div id="pg-ratings" class="page-action hide">
             <!--  Form Area -->
-            <div id="formArea">
-                <h3>Ratings Page</h3>
+            <div class="formArea">
+                <div class="formHolder">
+                    <form>
+                        <ul>
+                            <li>
+                                <input type="radio" name="rating" value="book"><span class="radio_btn_label">Search for ratings a book has received.</span><br>
+                                <input type="radio" name="rating" value="user"><span class="radio_btn_label">Search for all ratings made by a user.</span>
+                            </li>
+                            <li>
+                                <input type="number" placeholder="Enter the BookId" id="ratings_form_book" />
+                            </li>
+                            <li>
+                                <input type="number" placeholder="Enter the UserId" id="ratings_form_user"/>
+                            </li>
+                            
+                            <p id="ratingsFormErrMsg"></p>
+                            <li>
+                                <input type="submit" value="Find Ratings" class="button" id="ratingsBtn" />
+                            </li>
+                        </ul>
+                    </form>
+                </div>
             </div>
 
             <!--  Main Body -->        
-            <div id="mainBody">
+            <div id="mainBody_ratings">
+                <h3><span>Ratings</span></h3>
+                <p class="ratings_info"></p>
+                <div id="mainBody_ratings_table">
+                </div>
             </div>
         </div>
         

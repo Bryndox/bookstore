@@ -170,5 +170,157 @@ $(document).ready(function()
        
         return false;
     });
+    
+    //get all books
+   $("#loadBooksBtn").click(function(){
+       var elem=$(this);
+       if(elem.hasClass("loaded")){
+           return;
+       }
+       $.ajax({
+                
+                type: "POST",
+                dataType: "json",
+                url: "php/bookFunctions.php",
+                data: "action=GET_ALL_BOOKS&page=1",
+                cache: false,
+                beforeSend: function(){ 
+                    $("#loadBooksBtn").text('Loading. Please wait..');
+                },
+
+                success: function(data){
+                     
+                    var i;
+                    var pagesList='<li>page</li>';
+                    for (i = 1; i <= data["pages"]; i++) {
+                            if(i==1){
+                                pagesList += '<li class="book_list_page_no book_list_page_no_active">'+i+'</li>';
+                            }
+                        else
+                            pagesList += '<li class="book_list_page_no">'+i+'</li>';
+                    }
+                    $(".list_page_numbers"). html(pagesList);
+                    $(".list_page_numbers").css("background", "#34495E");
+                   $("#mainBody_books_table").html(data["data"]);
+                    elem.addClass("loaded");
+                    $("#mainBody_books_table").css("visibility","visible" );
+                    $("#loadBooksBtn").text('All The Books');
+                    
+                         //get section of books
+                           $(".book_list_page_no").click(function(){
+                               var listItem=$(this);
+                                var page=listItem.text();
+                               $.ajax({
+
+
+
+                                        type: "POST",
+                                        dataType: "json",
+                                        url: "php/bookFunctions.php",
+                                        data: "action=GET_ALL_BOOKS&page="+page,
+                                        cache: false,
+                                        beforeSend: function(){ 
+                                            $("#loadBooksBtn").text('Fetching list..');
+                                            $("#mainBody_books_table").css("opacity","0.5" );
+                                            $(".book_list_page_no_active").removeClass("book_list_page_no_active");
+                                        },
+
+                                        success: function(data){
+                                           
+                                           $("#mainBody_books_table").html(data["data"]);
+                                            $("#loadBooksBtn").text('All The Books');
+                                            $("#mainBody_books_table").css("opacity","1" );
+                                            
+                                            listItem.addClass("book_list_page_no_active");
+                                           //alert(data["pages"]);
+                                        }
+                                     });
+
+                           });
+                   //alert(data["pages"]);
+                }
+             });
+       
+   });
+    
+     //Enabling/disabling textboxes with radio buttons 
+    $("input[type=radio]").click(function(){
+        var choice=$(this).attr('value');
+        switch(choice){
+            case "user":
+             $("#ratings_form_user").removeAttr("disabled"); 
+             $("#ratings_form_user").css("color", "#000");  
+             $("#ratings_form_book").attr("disabled", "disabled"); 
+             $("#ratings_form_book").css("background", "#ededed");   
+             $("#ratings_form_book").css("color", "#ededed");   
+             break;
+                
+            case "book":
+             $("#ratings_form_book").removeAttr("disabled"); 
+             $("#ratings_form_book").css("background", "#fff");  
+             $("#ratings_form_book").css("color", "#000");  
+             $("#ratings_form_user").attr("disabled", "disabled"); 
+             $("#ratings_form_user").css("background", "#ededed");
+             $("#ratings_form_user").css("color", "#ededed");
+            break;
+        }
+        
+    });
+    
+     //Sesrching for ratings 
+    $("#ratingsBtn").click(function(){
+        
+        var value;
+        var elem=$("input[name=rating]:checked");
+        var choice=elem.attr('value');
+        
+         switch(choice){
+                case "user":
+                 value=$.trim($("#ratings_form_user").val());
+                 break;
+                 
+                 case "book":
+                 value=$.trim($("#ratings_form_book").val());
+                 break; 
+                 
+                 default: 
+                 $("#ratingsFormErrMsg").text("Please select one option"); 
+                 return false;     
+         }
+        
+        if(value.length<1 ){
+            
+           $("#ratingsFormErrMsg").text("Enter a value.."); 
+            return false;
+        }
+        $("#ratingsFormErrMsg").text(""); 
+        $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "php/bookFunctions.php",
+                data: "action=GET_RATINGS&option="+choice+"&value="+value,
+                cache: false,
+                beforeSend: function(){ 
+                    $("#ratingsBtn").val('Fetching list..');
+                    $("#mainBody_ratings_table").css("opacity","0.5");
+                },
+
+                success: function(data){
+                    // alert(data);
+                     if(data["rows"]>0){
+                         $(".ratings_info").text("Showing "+data["rows"]+" ratings");
+                     }
+                    else{
+                        $(".ratings_info").text("");
+                    }
+                     $("#ratingsBtn").val('Find Ratings');                     
+                     $("#mainBody_ratings_table").html(data["data"]);
+                      $("#mainBody_ratings_table").css("opacity","1");
+                }
+
+        });
+        return false;
+    });
+ 
 
 });

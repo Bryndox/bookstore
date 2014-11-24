@@ -22,5 +22,6 @@ $(function() {
         .addClass( SHOW_CLASS )
         .hide()
         .fadeIn( 300 );
+      
   });
 });
