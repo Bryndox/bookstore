@@ -162,15 +162,17 @@ body {
 #mainBody_ratings{
     min-height: 200px;   
 }
-.list_page_numbers{
+.list_page_numbers,
+.list_page_numbers_ratings{
    color: #fff;
-    height: 10px;
+    min-height: 10px;
     display: block;
     text-align: center;
     width: 500px;
     margin: 20px auto;
     font-size: 12px;
     padding: 10px;
+    overflow: hidden;
 }
 .ratings_info{
     color: #000;
@@ -182,18 +184,22 @@ body {
 
 }
 
-.list_page_numbers li{
+.list_page_numbers li,
+.list_page_numbers_ratings li{
    
     float: left;
     margin: 0 7px;
     display: inline;
 }
-.book_list_page_no{
+.book_list_page_no,
+.rating_list_page_no{
     cursor: pointer;
    
 }
 .book_list_page_no:hover,
-.booK_list_page_no_active{
+.booK_list_page_no_active,
+.rating_list_page_no:hover,
+.rating_list_page_no_active{
    color:#20E1B5 
 }
 .radio_btn_label{
@@ -315,7 +321,14 @@ td.text-right {
   text-align: right;
 }
 
-
+#form_radio_buttons{
+    
+    padding: 10px;
+    background:rgba(0,0,0,0.2);
+    border-radius: 3px;
+    margin-bottom: 10px;
+    
+}
 #footer{
     
     background: #34495E;

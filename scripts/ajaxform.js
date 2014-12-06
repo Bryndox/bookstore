@@ -189,7 +189,7 @@ $(document).ready(function()
                 },
 
                 success: function(data){
-                     
+                    
                     var i;
                     var pagesList='<li>page</li>';
                     for (i = 1; i <= data["pages"]; i++) {
@@ -301,6 +301,7 @@ $(document).ready(function()
                 data: "action=GET_RATINGS&option="+choice+"&value="+value,
                 cache: false,
                 beforeSend: function(){ 
+                
                     $("#ratingsBtn").val('Fetching list..');
                     $("#mainBody_ratings_table").css("opacity","0.5");
                 },
@@ -308,14 +309,59 @@ $(document).ready(function()
                 success: function(data){
                     // alert(data);
                      if(data["rows"]>0){
-                         $(".ratings_info").text("Showing "+data["rows"]+" ratings");
+                         $(".ratings_info").text("There are "+data["rows"]+" total ratings");
+                         var i;
+                        var pagesList='<li>page</li>';
+                        for (i = 1; i <= data["pages"]; i++) {
+                                if(i==1){
+                                    pagesList += '<li class="rating_list_page_no rating_list_page_no_active">'+i+'</li>';
+                                }
+                            else
+                                pagesList += '<li class="rating_list_page_no">'+i+'</li>';
+                        }
+                    
+                         $(".list_page_numbers_ratings"). html(pagesList);
+                         $(".list_page_numbers_ratings").css("background", "#34495E");
+                          $(".list_page_numbers_ratings").css("visibility", "visible");
                      }
                     else{
                         $(".ratings_info").text("");
+                         $(".list_page_numbers_ratings").css("visibility", "hidden");
                     }
                      $("#ratingsBtn").val('Find Ratings');                     
                      $("#mainBody_ratings_table").html(data["data"]);
                       $("#mainBody_ratings_table").css("opacity","1");
+                    
+                    
+                     //get section of ratings
+                           $(".rating_list_page_no").click(function(){
+                               var listItem=$(this);
+                                var page=listItem.text();
+                               $.ajax({
+
+
+
+                                        type: "POST",
+                                        dataType: "json",
+                                        url: "php/bookFunctions.php",
+                                        data: "action=GET_RATINGS&option="+choice+"&value="+value+"&page="+page,
+                                        cache: false,
+                                        beforeSend: function(){ 
+                                    
+                                            $("#mainBody_ratings_table").css("opacity","0.5" );
+                                            $(".rating_list_page_no_active").removeClass("rating_list_page_no_active");
+                                        },
+
+                                        success: function(data){
+                                           $("#mainBody_ratings_table").html(data["data"]);
+                                            $("#mainBody_ratings_table").css("opacity","1" );
+                                            
+                                            listItem.addClass("rating_list_page_no_active");
+                                           //alert(data["pages"]);
+                                        }
+                                     });
+
+                           });
                 }
 
         });

@@ -8,16 +8,16 @@ $return=array();
 
 switch ($_POST['action']) {
     
-    //Login
-    case "GET_ALL_BOOKS":{
+    
+    case "GET_ALL_BOOKS":
        if(!isset($_POST['page'])){
            $_POST['page']=1;           
        }
         $page=$_POST['page'];
         $startRow=(($page-1)*$rows_per_page);
-    
-        $query="SELECT bookId
+        $query="SELECT *
                 FROM books";
+     
         $result=$connection->performQuery($query);
         $no_pages=ceil(($result->num_rows)/$rows_per_page);
         
@@ -25,11 +25,8 @@ switch ($_POST['action']) {
                 FROM books
                 LIMIT ".$startRow.", ".$rows_per_page;
         $result=$connection->performQuery($query);     
-    
-        
-       
      
-        $return["pages"] = $no_pages;
+        
     
         $data='<table class="table-fill">
                         <thead>
@@ -52,20 +49,33 @@ switch ($_POST['action']) {
         $data.= '</tbody>
                  </table>';
         $return["data"] = $data;
+        $return["pages"]=$no_pages;
         echo json_encode($return);
         break; 
    
-    }
+    
 
     
     
     //get book ratings
     case "GET_RATINGS":
+        if(!isset($_POST['page'])){
+           $_POST['page']=1;           
+        }
+        $page=$_POST['page'];
+        $startRow=(($page-1)*$rows_per_page);
         $value=$_POST["value"];
         $option=$_POST["option"];
-        $sql="";
+        
+        
         if($option=="book"){
             $sql="SELECT * 
+             FROM ratings
+             WHERE bookId=".$value."
+             LIMIT ".$startRow.", ".$rows_per_page;
+            
+            
+            $query="SELECT * 
              FROM ratings
              WHERE bookId=".$value;
         }
@@ -73,13 +83,23 @@ switch ($_POST['action']) {
             $sql="SELECT * 
              FROM ratings
              WHERE userId=".$value;
+            
+             $query="SELECT * 
+             FROM ratings
+             WHERE userId=".$value."
+             LIMIT ".$startRow.", ".$rows_per_page;
         }
         else{
         die("Wrong option");
         
         }
+    
+        $result=$connection->performQuery($query);
+         $return["rows"]=$result->num_rows;
+        $no_pages=ceil(($result->num_rows)/$rows_per_page);
         $result=$connection->performQuery($sql);
         if($result->num_rows >0){
+            
             $data='<table class="table-fill">
                         <thead>
                         <tr>
@@ -105,7 +125,7 @@ switch ($_POST['action']) {
                     </table>';
             
             $return["data"]=$data;
-            $return["rows"]=$result->num_rows;
+            $return["pages"] = $no_pages;
             echo json_encode($return);
         }
     

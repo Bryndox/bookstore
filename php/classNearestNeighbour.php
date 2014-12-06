@@ -41,7 +41,7 @@ class nearestNeighbour{
         
         //if userId does not exist in database
         if($numberBooks==0){
-           die ("No user by that id"); 
+           return null; 
         }
         
          //if userId exists in database
@@ -60,7 +60,6 @@ class nearestNeighbour{
         //Create comma separated string of books
         $this->bookString=implode(",",$this->booksArray);
         
-        echo "Books rated: ".$this->bookString."</br>";
         
         //get other users who have rated the same boooks
         $query="SELECT  userId, COUNT(bookId)
@@ -75,7 +74,7 @@ class nearestNeighbour{
         
         //if no user have rated that book
         if($numberUsers==0){
-           die ("No usesr have rated that book"); 
+          return null; 
         }
         
          //if users have rated that book
@@ -86,7 +85,7 @@ class nearestNeighbour{
                     array_push($this->userArray, $row["userId"]);
             }  
             $this->userString=implode(",", $this->userArray);
-            echo "Users: ".$this->userString."</br>";
+           
         }
         
         //get these users ratings
@@ -151,7 +150,7 @@ class nearestNeighbour{
 
 
                 //insert user's correlation score to finalScore array
-                $this->$finalscore[$currentUser]=$score;
+                $this->finalscore[$currentUser]=$score;
                // echo "User ".$currentUser.": ".$score."</br>";
 
                 //clear contents of working array and initialize with next user
@@ -160,14 +159,26 @@ class nearestNeighbour{
 
                 //set currentuser to be the next user
                 $currentUser=$row['userId'];
-
+                
             }//end else
         }//end while
-
+        
+        //sort the array of final score in descending order
+         arsort($this->finalscore);
+        
+        //return array of users with their corresponding similarity score
+        return $this->finalscore;
+        
+    }//end getNearestNeighbours
     
     
-    }
-}
+    
+    
+    function getUserRatedBooks(){
+        return $this->booksArray;
+    }//end of getUserRatedBooks
+    
+}//end class
 
 
 ?>

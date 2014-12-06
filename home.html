@@ -28,9 +28,7 @@
                 <li>
                     <a href="#pg-ratings" id="tabs-ratings">RATINGS</a>
                 </li>
-                <li>
-                    <a href="#pg-statistics" id="tabs-statistics">STATISTICS</a>
-                </li>
+                
             </ul>
             
             <ul class="settingsList">
@@ -173,9 +171,9 @@
                 <div class="formHolder">
                     <form>
                         <ul>
-                            <li>
-                                <input type="radio" name="rating" value="book"><span class="radio_btn_label">Search for ratings a book has received.</span><br>
-                                <input type="radio" name="rating" value="user"><span class="radio_btn_label">Search for all ratings made by a user.</span>
+                            <li id="form_radio_buttons">
+                                <input type="radio" name="rating" value="book"><span class="radio_btn_label">RATINGS PER BOOK</span><br>
+                                <input type="radio" name="rating" value="user"><span class="radio_btn_label">RATINGS PER USER</span>
                             </li>
                             <li>
                                 <input type="number" placeholder="Enter the BookId" id="ratings_form_book" />
@@ -197,25 +195,13 @@
             <div id="mainBody_ratings">
                 <h3><span>Ratings</span></h3>
                 <p class="ratings_info"></p>
+                <ul class="list_page_numbers_ratings">
+                    <li>hjhjbhb</li>
+                    </ul>
                 <div id="mainBody_ratings_table">
                 </div>
             </div>
         </div>
-        
-        
-        <!--Statistics markup  -->
-        <div id="pg-statistics" class="page-action hide">
-            <!--  Form Area -->
-            <div id="formArea">
-                <h3>Statistics Page</h3>
-            </div>
-
-            <!--  Main Body -->        
-            <div id="mainBody">
-            </div>
-        </div>
-        
-        
         
         
         
