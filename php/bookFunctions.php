@@ -1,6 +1,8 @@
 
 <?php
-include ('connection.php');
+require ('connection.php');
+require ('classNearestNeighbour.php');
+require ('classRecommender.php');
 $connection=new createConnection();
 $connection->connectToDatabase();
 $rows_per_page=1000;
@@ -8,7 +10,7 @@ $return=array();
 
 switch ($_POST['action']) {
     
-    
+    //get all books
     case "GET_ALL_BOOKS":
        if(!isset($_POST['page'])){
            $_POST['page']=1;           
@@ -138,12 +140,123 @@ switch ($_POST['action']) {
     
     break;
     
+    
+    case "GET_RECOMMENDATIONS":
+        $nearestNeighbours=array();
+        $recommendations=array();
+        $result=array();
+    
+    //variables for timing
+        
+        if(isset($_POST['userId']) && isset($_POST['neighbourhoodSize'])){    
+            $userId= $_POST['userId'];       
+            $neighbourhoodSize=$_POST['neighbourhoodSize'];
+            
+        }
+        else
+            die ('Value(s) not set');
+        
+         $query="SELECT *
+                FROM ratings
+                WHERE userId=".$userId;
+        $result=$connection->performQuery($query);
+    
+        if($result->num_rows==0){
+            $return["data"]="ERROR_USER_NOT_FOUND";
+            
+        }
+        else{
+        //get recommendations
+        $recommender=new recommender();
+       
+        $recommendations=$recommender->getRecommendations($userId, $neighbourhoodSize);
+        
+        $nearestNeighbours=$recommender->getNeighbours();
+        
+        
+        //prepare recommendations table output
+        $data='<table class="table-fill">
+                        <thead>
+                        <tr>
+                        <th style="width:2%" class="text-left">NO.</th>
+                        <th style="width:15%" class="text-left">BOOK ID</th>
+                        <th style="width:10%" class="text-left">YEAR</th>
+                        <th style="" class="text-left">TITLE</th>
+                        <th style="width: 15%" class="text-left">PREDICTED RATING</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-hover">';
+            $counter=0;
+            foreach($recommendations as $key => $value){
+                $counter++;
+                
+                     $query="SELECT *
+                        FROM books
+                        WHERE bookId=".$key;
+                $result=$connection->performQuery($query);
+                $row=$result->fetch_array(MYSQLI_ASSOC);
+                $data.='<tr>
+                        <td class="text-left">'.$counter.'</td>
+                        <td class="text-left">'.$row["bookId"].'</td>
+                        <td class="text-left">'.$row["year"].'</td>
+                        <td class="text-left">'.$row["name"].'</td>
+                        <td class="text-left">'.$value.'</td>
+                        </tr>';
+   
+                
+                        }
+    
+            $data.='</tbody>
+                    </table>';
+            
+    
+    
+            //prepare nearest neighbours output
+            $dataNeigh='<table class="table-fill">
+                        <thead>
+                        <tr>
+                        <th style="width:1%" class="text-left">NO.</th>
+                        <th style="width:5%" class="text-left">USER ID</th>
+                        <th style="width:10%" class="text-left">SIMILARITY SCORE</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-hover">';
+    
+               $counter=0;
+                foreach($nearestNeighbours as $key=> $value){
+                    $counter++;
+                    
+                        $dataNeigh.='
+                            <tr>
+                                <td class="text-left">'.$counter.'</td>
+                                <td class="text-left">'.$key.'</td>
+                                <td class="text-left">'.$value.'</td>
+                                </tr>
+                                ';
+                    
+                    
+                }
+    
+    
+    
+             $dataNeigh.='</tbody>
+                    </table>';
+    
+            $return["data"]=$data;
+            $return["dataNeigh"]=$dataNeigh;
+        }
+            //echo $data;
+            echo json_encode($return);
+        
+            //echo sizeof($recommendations);*/
+        
+            break;
         
     default:
         echo "Wrong option";
         
-}
 
+}
        
 
 

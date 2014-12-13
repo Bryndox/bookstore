@@ -11,11 +11,11 @@ class nearestNeighbour{
     var $finalscore=array();
     var $connection;
     var $userId;
-    var $userLimit=1000;
+    var $userLimit;
     
     /*-----------------constructor------------------------------*/
     function __construct(){
-        
+       
         //connect to database
          $conn=new createConnection();
        
@@ -28,9 +28,11 @@ class nearestNeighbour{
         
         
     /*----------Function to get the nearest neighbours-----------*/
-    function getNearestNeighbours($userId){
-        $this->userId=$userId;
-
+    function getNearestNeighbours($userId, $userLimit){
+        $this->userId=$userId; 
+       
+        $this->userLimit=$userLimit;
+       
         //get list of books user has rated together with the ratings
         $query="SELECT bookId, rating
                 FROM ratings 
@@ -38,14 +40,16 @@ class nearestNeighbour{
 
         $result=$this->connection->performQuery($query);
         $numberBooks=$result->num_rows;
-        
+         
         //if userId does not exist in database
         if($numberBooks==0){
+           
            return null; 
         }
         
          //if userId exists in database
         else{
+            
             
                 while($row=$result->fetch_array(MYSQLI_ASSOC)){
                      //populate array of books that user has rated 
@@ -166,7 +170,13 @@ class nearestNeighbour{
         //sort the array of final score in descending order
          arsort($this->finalscore);
         
+        
+        //get the nearest K neighbours
+       // array_slice($this->finalscore, 0, $this->NeighbourThreshold);
+        
+        
         //return array of users with their corresponding similarity score
+        
         return $this->finalscore;
         
     }//end getNearestNeighbours

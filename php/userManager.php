@@ -11,7 +11,7 @@ class userManager
     var $username;
     var $password;
     var $connection;
-    var $sessionTime=5;
+    var $sessionTime=15;
     
     function __construct() 
     { 

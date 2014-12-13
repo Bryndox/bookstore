@@ -367,6 +367,64 @@ $(document).ready(function()
         });
         return false;
     });
+    
+    
+    //get predictions
+     
+    $('#get_recommendations').click(function(){
+    
+        var value=$.trim($("#recom_form_id").val());
+        var size=$.trim($("#recom_form_number").val());
+        
+        //set error message if value not availed
+        if(value.length<1 || size.length <1){
+            $("#recomFormErrMsg").text("Please fill all entries!"); 
+            return false;            
+        }
+        else{
+            $("#recomFormErrMsg").text(""); 
+        }
+        
+        
+        $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "php/bookFunctions.php",
+                data: "action=GET_RECOMMENDATIONS&userId="+value+"&neighbourhoodSize="+size,
+                cache: false,
+                 beforeSend: function(){ 
+                        $("#mainbody_recom_table").css("opacity","0.5" );
+                        $("#mainbody_neigh_table").css("opacity","0.5" );
+                        $("#get_recommendations").val("Please wait.." );
+                       
+                    },
+                success: function(data){
+                     
+                     if(data["data"]=="ERROR_USER_NOT_FOUND"){
+                        //alert(data["data"]); 
+                          $("#mainbody_recom_table").html("");
+                         $("#mainbody_neigh_table").html("");
+                         $("#recom_title").text("No user has ID "+value+". Try another ID");
+                         $("#mainbody_recom_table").css("opacity","1" );
+                         $("#mainbody_neigh_table").css("opacity","1" );
+                         $("#get_recommendations").val("Find Recommendations" );
+                     }
+                      else{   
+                     
+                     $("#mainbody_recom_table").html(data["data"]);
+                     $("#mainbody_neigh_table").html(data["dataNeigh"]);
+                     $("#recom_title").text("Book Recommendations for user "+value);
+                     $("#mainbody_recom_table").css("opacity","1" );
+                     $("#mainbody_neigh_table").css("opacity","1" );
+                     $("#get_recommendations").val("Find Recommendations" );
+                    }
+                }
+        });
+            
+            
+       
+        return false;
+    });
  
 
 });

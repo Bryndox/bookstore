@@ -3,12 +3,14 @@
 require_once "classNearestNeighbour.php";
 require_once "connection.php";
 class recommender{
-    var $nearestNeighbours;
+    var $nearestNeighbours=array();
     var $ratingThreshold=3;
     var $connection;
     var $userAverages=array();
     var $finalRecommendations=array();
     var $userId;
+    var $recommendationThreshhold=100;
+    
     
     
     
@@ -22,23 +24,30 @@ class recommender{
             $this->connection=$conn;
             $this->connection->connectToDatabase();
         } 
+        
+        //set the array of nearest neighbours
+       // $this->nearestNeighbours=$nearestNeighbours;
     }//end constructor 
     
     
     
     /*-------------Function to get recommendations-----------*/
-    function getRecommendations($userId){
+    function getRecommendations($userId, $neighbourhoodSize){
         
         $this->userId=$userId;
         //get nearest neighbours
-        $nearestNeighbour=new nearestNeighbour();        
-        $this->nearestNeighbours=$nearestNeighbour->getNearestNeighbours($userId);
+        $nearestNeighbour=new nearestNeighbour(); 
+      
+        $this->nearestNeighbours=$nearestNeighbour->getNearestNeighbours($userId, $neighbourhoodSize);
+       
         
+        //user with that ID does not exist
         if($this->nearestNeighbours == null){
-            die ("no user by that Id");   
+           
+            return null;   
         }
-        
-        
+        // die($neighbourhoodSize);
+       
         //find books neighbours have rated more that threshhold
         $userArray=array();
         $userString=array();
@@ -69,17 +78,25 @@ class recommender{
          
         //compute predicted rating
         //compute averages
+          
         $this->computeUserAverages($userString);
-        
-        
-        foreach($bookArray as $key=>$value){
-            $this->getPredictedRating($value, $userString);
-        }
          
+        
+        /*foreach($bookArray as $key=>$value){
+            $this->getPredictedRatinggg($value, $userString);
+        }*/
+        
+       
+         $bookString=implode("," , $bookArray);
+        $this->getPredictedRating($bookString, $userString);
+        
+            
+        
         arsort($this->finalRecommendations);
-        foreach($this->finalRecommendations as $key=>$value){
-            echo "BookId: ".$key."   Predicted: ".$value."</br>"; 
-        }
+        array_slice($this->finalRecommendations, 0, 90);
+        
+       
+        return $this->finalRecommendations;
     
         
         
@@ -88,8 +105,8 @@ class recommender{
     
     
     
-    //function to get predicted ratings
-    function getPredictedRating($bookId, $userString){
+    /*function to get predicted ratings
+    function getPredictedRatinggg($bookId, $userString){
         $query="SELECT bookId, userId, rating
                 FROM ratings
                 WHERE userId IN(".$userString.")
@@ -106,8 +123,54 @@ class recommender{
     
         //copy the book id and its predicted ratings to the array
         $this->finalRecommendations[$bookId]=($userAverage+($upper/$lower));
-    }//end of getPredictedRating
+    }//end of getPredictedRating*/
     
+    
+    
+    
+    
+    function getPredictedRating($bookString, $userString){
+        $query="SELECT bookId, userId, rating
+                FROM ratings 
+                WHERE userId IN(".$userString.")
+                AND bookId IN(".$bookString.")
+                ORDER BY bookId";
+        
+        $result=$this->connection->performQuery($query);
+        $upper=0;
+        $lower=0;
+        $currentBook=-1;
+        $userAverage=$this->userAverages[$this->userId];
+        
+        while($row=$result->fetch_array(MYSQLI_ASSOC)){
+             if($row['bookId'] == $currentBook || $currentBook == -1){
+                
+                 $upper+=$this->nearestNeighbours[$row["userId"]] * ($row["rating"]-$this->userAverages[$row["userId"]]);
+                 $lower+=abs($this->nearestNeighbours[$row["userId"]]);
+                 $currentBook=$row['bookId'];
+            }
+            else{
+                 $prediction=$userAverage+($upper/$lower);
+                 if($prediction>5){
+                     $prediction=5.0;                     
+                 }
+                    else if($prediction<0){
+                        $prediction=0.0; 
+                    }
+                
+                 $this->finalRecommendations[$currentBook]=$prediction;
+                  $upper=0;
+                  $lower=0;
+                  $currentBook=$row['bookId'];
+                
+                
+                 $upper+=$this->nearestNeighbours[$row["userId"]] * ($row["rating"]-$this->userAverages[$row["userId"]]);
+                 $lower+=abs($this->nearestNeighbours[$row["userId"]]);
+                
+            }
+        }
+           
+    }//end of getPredictedRatings
     
     
     
@@ -131,7 +194,12 @@ class recommender{
         
     }//end of computeUserAverages
     
-    
+    //function to get nearest neighbours
+    function getNeighbours(){
+        return $this->nearestNeighbours;
+        
+        
+    }
     
     
 }//end of class recommender

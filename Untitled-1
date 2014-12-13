@@ -1,0 +1,55 @@
+case "GET_RECOMMENDATIONS":
+        $nearestNeighbours=array();
+        $recommendations=array();
+        $result=array();
+        if(isset($_POST['userId'])){    
+            $userId= $_POST['userId'];       
+            
+        }
+        else
+            die ('userId not set');
+        
+        //get the nearest neighbours
+        $NNeighbours=new nearestNeighbour();
+        $nearestNeighbours=$NNeighbours->getNearestNeighbours($userId);
+    
+        //get recommendations
+        $recommender=new recommender($nearestNeighbours);
+        $recommendations=$recommender->getRecommendations($userId);
+        
+        
+        $data='<table class="table-fill">
+                        <thead>
+                        <tr>
+                        <th style="width:2%" class="text-left">NO.</th>
+                        <th style="width:15%" class="text-left">BOOK ID</th>
+                        <th style="width:10%" class="text-left">YEAR</th>
+                        <th style="" class="text-left">TITLE</th>
+                        <th style="width: 15%" class="text-left">PREDICTED RATING</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-hover">';
+            $counter=0
+            foreach($recommendations as $key => $value){
+                $counter++;
+                $query="SELECT *
+                        FROM books
+                        WHERE bookId=".$key;
+                $result=$connection->performQuery($query);
+                $row=$result->fetch_array(MYSQLI_ASSOC);
+                $data.='<tr>
+                        <td class="text-left">'.$counter.'</td>
+                        <td class="text-left">'.$row["bookId"].'</td>
+                        <td class="text-left">'.$row["year"].'</td>
+                        <td class="text-left">'.$row["name"].'</td>
+                        <td class="text-left">'.$value.'</td>
+                        </tr>';
+            }
+    
+            $data.='</tbody>
+                    </table>';
+            
+            $return['data']=$data;
+            echo json_encode($return);
+            break;
+    

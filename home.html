@@ -1,3 +1,6 @@
+<?php
+session_start()
+?>
 <html>
     <head>
        <!-- JS  -->
@@ -31,10 +34,10 @@
                 
             </ul>
             
-            <ul class="settingsList">
-                <a href=""><li>Settings</li></a>
-                <a href="" id="logout"><li>Log Out</li></a>
-            </ul>
+          
+               
+                <a href="" id="logout">Log Out [<?php echo $_SESSION["username"] ?>]</a>
+            
         </div>
         
         
@@ -46,13 +49,14 @@
                     <form>
                         <ul>
                             <li>
-                                <input type="text" placeholder="Enter the UserId" />
+                                <input type="number" id="recom_form_id" placeholder="Enter the UserId" required/>
                             </li>
                             <li>
-                                <input type="number" placeholder="Number of neighbours" min="1" max="50"/>
+                                <input type="number" id="recom_form_number"  placeholder="Number of neighbours" min="1" max="1000"  value="100" required/>
                             </li>
+                            <p id="recomFormErrMsg"></p>
                             <li>
-                                <input type="submit" value="Find Recommendations" class="button" />
+                                <input type="submit" id="get_recommendations" value="Find Recommendations" class="button" />
                             </li>
                         </ul>
                     </form>
@@ -62,90 +66,13 @@
             <!--  Main Body -->        
             <div id="mainBody">
                 <div class="main-body-left">
-                    <h3><span>Book Recommendations</span></h3>
-                    <table class="table-fill">
-                        <thead>
-                        <tr>
-                        <th style="width:2%" class="text-left">NO.</th>
-                        <th style="width:15%" class="text-left">BOOK ID</th>
-                        <th style="width:10%" class="text-left">YEAR</th>
-                        <th style="" class="text-left">TITLE</th>
-                        </tr>
-                        </thead>
-                        <tbody class="table-hover">
-                        <tr>
-                        <td class="text-left">1</td>
-                        <td class="text-left">12331</td>
-                        <td class="text-left">1991</td>
-                        <td class="text-left">$ 50,000.00</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">2</td>
-                        <td class="text-left">1271</td>
-                        <td class="text-left">2000</td>
-                        <td class="text-left">$ 10,000.00</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">3</td>
-                        <td class="text-left">331</td>
-                        <td class="text-left">1997</td>
-                        <td class="text-left">$ 85,000.00</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">4</td>
-                        <td class="text-left">12</td>
-                        <td class="text-left">2005</td>
-                        <td class="text-left">$ 56,000.00</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">5</td>
-                        <td class="text-left">1233121</td>
-                        <td class="text-left">2010</td>
-                        <td class="text-left">$ 98,000.00</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                    <h3><span id="recom_title">Book Recommendations</span></h3>
+                   <div id="mainbody_recom_table"> </div>
                 </div>
                 <div class="main-body-right">
                     <h3><span>Nearest Neighbours</span></h3>
-                    <table class="table-fill">
-                        <thead>
-                        <tr>
-                        <th style="width:1%" class="text-left">NO.</th>
-                        <th style="width:5%" class="text-left">USER ID</th>
-                        <th style="width:10%" class="text-left">SIMILARITY SCORE</th>
-                        </tr>
-                        </thead>
-                        <tbody class="table-hover">
-                        <tr>
-                        <td class="text-left">1</td>
-                        <td class="text-left">11223</td>
-                        <td class="text-left">0.991</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">2</td>
-                        <td class="text-left">112223</td>
-                        <td class="text-left">0.900</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">3</td>
-                        <td class="text-left">123</td>
-                        <td class="text-left">0.897</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">4</td>
-                        <td class="text-left">7663</td>
-                        <td class="text-left">0.8005</td>
-                        </tr>
-                        <tr>
-                        <td class="text-left">5</td>
-                        <td class="text-left">123</td>
-                        <td class="text-left">0.7010</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div id="mainbody_neigh_table" style="overflow-y: scroll;max-height: 3335;padding: 5px;"> </div>
+                                   </div>
                 <div class="clear"></div>
             </div>
         </div>
